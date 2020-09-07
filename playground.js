@@ -1,5 +1,3 @@
-import mountBoard from './pieces/index.js';
-
 export default function createGame() {
   const state = {
     screen: {
@@ -10,7 +8,6 @@ export default function createGame() {
 
   const main = {
     board: {},
-    turn: 'white',
   }
 
   const observers = [];
@@ -26,28 +23,34 @@ export default function createGame() {
   }
 
   function start() {
-    main.board = mountBoard();
-
     notifyAll({
       type: 'start-game'
     });
   }
 
-  function getState() {
-    return {...main}
-  }
-
-  function togglePlayer() {
-    if(main.turn === 'white') {
-      main.turn = 'black';
-    } else {
-      main.turn = 'white';
-    }
+  function addPiece(position, piece) {
+    main.board[position] = piece;
 
     notifyAll({
-      type: 'toggle-player',
-      turn: main.turn
-    })
+      type: 'add-piece',
+      position
+    });
+  }
+
+  function removePiece(position) {
+    const piece = main.board[position];
+    delete  main.board[position];
+
+    notifyAll({
+      type: 'remove-piece',
+      position
+    });
+
+    return piece;
+  }
+
+  function getState() {
+    return {...main};
   }
 
   function move(command) {
@@ -63,10 +66,6 @@ export default function createGame() {
       throw new Error('This position do not have any piece');
     }
 
-    if(piece.side !== main.turn) {
-      throw new Error('Is not your turn');
-    }
-
     if(!piece.canMove(from, to, main.board)) {
       throw new Error('This piece cannot move to this position');
     }
@@ -78,14 +77,14 @@ export default function createGame() {
       type: 'move-piece',
       from, to
     });
-
-    togglePlayer();
   }
 
   return {
     state,
     move,
     start,
+    addPiece,
+    removePiece,
     getState,
     subscribe,
   }

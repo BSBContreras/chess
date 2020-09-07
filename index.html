@@ -58,17 +58,22 @@
   <script type="module">
     import createGame from './game.js';
     import renderScreen from './render-screen.js';
-
-    const game = createGame();
+    import createKnightsTour from './knights-tour/index.js';
 
     const screen = document.getElementById('screen');
-    game.subscribe(() => renderScreen(screen, game));
+
+    // const knightsTour = createKnightsTour();
+    // knightsTour.subscribe(() => renderScreen(screen, knightsTour.getState().board));
+    // knightsTour.subscribe(console.log);
+    // knightsTour.start('a4');
+
+    const game = createGame();
+    game.subscribe(() => renderScreen(screen, game.getState().board));
     game.subscribe(console.log);
+    game.start();
 
     const gameInput = document.getElementById('game-input');
     const formInput = document.getElementById('form-input');
-    
-    game.start();
 
     formInput.onsubmit = (event) => {
       event.preventDefault();
@@ -84,7 +89,7 @@
 
       game.move({ from, to });
     }
-
+    
   </script>
 </body>
 </html>

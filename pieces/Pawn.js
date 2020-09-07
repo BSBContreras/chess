@@ -1,7 +1,7 @@
 import coordsToLocation from '../utils/coordsToLocation.js';
 import locationToCoords from '../utils/locationToCoords.js';
 
-export default function Pawn(side) {
+export default function Pawn(side = 'white') {
 
   const styles = {
     'white': {

@@ -1,11 +1,13 @@
 import coordsToLocation from './utils/coordsToLocation.js';
 
-export default function renderScreen(screen, game) {
-  const context = screen.getContext('2d')
-  context.clearRect(0, 0, 10, 10)
+export default function renderScreen(screen, board) {
+  const context = screen.getContext('2d');
+  context.clearRect(0, 0, screen.width, screen.height);
 
   const sizeW = screen.width / 8;
   const sizeH = screen.height / 8;
+
+  console.log(board);
 
   for(let i = 0; i < 8; i++) {
     for(let j = 0; j < 8; j++) {
@@ -25,9 +27,9 @@ export default function renderScreen(screen, game) {
       context.fillRect(j * sizeW, i * sizeH, sizeW, sizeH);
     }
   }
-
-  for(const pieceCoord in game.state.board) {
-    const piece = game.state.board[pieceCoord];
+  
+  for(const pieceCoord in board) {
+    const piece = board[pieceCoord];
     const [ x, y ] = coordsToLocation(pieceCoord);
     const { path, color } = piece.style;
     
